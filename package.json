@@ -1,0 +1,9 @@
+{
+  "name": "codereview-ai",
+  "version": "1.0.0",
+  "description": "AI-powered code review for HTML, CSS and JavaScript",
+  "private": true,
+  "engines": {
+    "node": ">=18"
+  }
+}

@@ -1,0 +1,1131 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <!-- ═══════════════════════════════════════════════
+         SEO & META
+    ═══════════════════════════════════════════════ -->
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <meta http-equiv="X-UA-Compatible" content="IE=edge" />
+
+    <!-- Primary SEO -->
+    <title>CodeReview AI — Instant HTML, CSS & JavaScript Code Reviews</title>
+    <meta name="description" content="Paste your HTML, CSS, or JavaScript code and get instant AI-powered feedback. Catch naming issues, logic bugs, security risks and style improvements — free, no sign-up required." />
+    <meta name="keywords" content="code reviewer, AI code review, JavaScript code checker, HTML validator, CSS linter, beginner coding help, learn to code, code feedback tool, free code review" />
+    <meta name="author" content="CodeReview AI" />
+    <meta name="robots" content="index, follow" />
+    <link rel="canonical" href="https://YOUR-PROJECT.vercel.app/" />
+
+    <!-- Open Graph -->
+    <meta property="og:type" content="website" />
+    <meta property="og:title" content="CodeReview AI — Instant HTML, CSS & JavaScript Code Reviews" />
+    <meta property="og:description" content="Paste your code and get AI feedback in seconds. Detect bugs, naming issues, security risks and more — free." />
+    <meta property="og:url" content="https://YOUR-PROJECT.vercel.app/" />
+    <meta property="og:site_name" content="CodeReview AI" />
+
+    <!-- Twitter Card -->
+    <meta name="twitter:card" content="summary_large_image" />
+    <meta name="twitter:title" content="CodeReview AI — Instant Code Reviews" />
+    <meta name="twitter:description" content="Paste your HTML, CSS, or JavaScript and get instant AI-powered feedback. Free, no sign-up." />
+
+    <!-- Structured Data -->
+    <script type="application/ld+json">
+    {
+      "@context": "https://schema.org",
+      "@type": "WebApplication",
+      "name": "CodeReview AI",
+      "description": "AI-powered code reviewer for HTML, CSS and JavaScript.",
+      "applicationCategory": "DeveloperApplication",
+      "operatingSystem": "Web",
+      "offers": { "@type": "Offer", "price": "0", "priceCurrency": "USD" }
+    }
+    </script>
+
+    <!-- Fonts -->
+    <link rel="preconnect" href="https://fonts.googleapis.com" />
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+    <link href="https://fonts.googleapis.com/css2?family=JetBrains+Mono:wght@300;400;500;700&family=Outfit:wght@400;600;700;800&display=swap" rel="stylesheet" />
+
+    <style>
+      /* ═══════════════════════════════════════════
+         DESIGN TOKENS
+      ═══════════════════════════════════════════ */
+      :root {
+        --bg:           #080b10;
+        --surface:      #0d1117;
+        --surface-alt:  #0a0e15;
+        --border:       #161b24;
+        --border-2:     #1e2535;
+        --text:         #cdd6f4;
+        --text-mid:     #94a3b8;
+        --text-dim:     #64748b;
+        --text-ghost:   #334155;
+        --text-ghost2:  #2a3548;
+
+        --green:        #2dd4bf;
+        --green-bg:     rgba(45,212,191,0.07);
+        --green-bd:     rgba(45,212,191,0.2);
+        --yellow:       #fbbf24;
+        --red:          #f87171;
+        --red-bg:       rgba(248,113,113,0.08);
+        --red-bd:       #f87171;
+
+        --lang-js:      #f7df1e;
+        --lang-css:     #2965f1;
+        --lang-html:    #e34c26;
+
+        --radius-sm:    5px;
+        --radius-md:    8px;
+        --radius-lg:    12px;
+
+        --font-mono:    'JetBrains Mono', 'Fira Code', monospace;
+        --font-display: 'Outfit', sans-serif;
+      }
+
+      /* ═══════════════════════════════════════════
+         RESET & BASE
+      ═══════════════════════════════════════════ */
+      *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+      html { scroll-behavior: smooth; }
+      body {
+        background: var(--bg);
+        color: var(--text);
+        font-family: var(--font-mono);
+        min-height: 100vh;
+        overflow-x: hidden;
+      }
+      a { color: inherit; text-decoration: none; }
+      button { cursor: pointer; font-family: var(--font-mono); }
+      textarea { font-family: var(--font-mono); }
+      img { max-width: 100%; }
+
+      ::-webkit-scrollbar { width: 4px; height: 4px; }
+      ::-webkit-scrollbar-track { background: transparent; }
+      ::-webkit-scrollbar-thumb { background: var(--border-2); border-radius: 2px; }
+
+      /* ═══════════════════════════════════════════
+         ANIMATIONS
+      ═══════════════════════════════════════════ */
+      @keyframes spin    { to { transform: rotate(360deg); } }
+      @keyframes blink   { 0%,100%{opacity:1} 50%{opacity:0} }
+      @keyframes fadeUp  { from{opacity:0;transform:translateY(16px)} to{opacity:1;transform:translateY(0)} }
+      @keyframes fadeIn  { from{opacity:0} to{opacity:1} }
+      @keyframes slideDown { from{opacity:0;transform:translateY(-8px)} to{opacity:1;transform:translateY(0)} }
+      @keyframes glow    { 0%,100%{opacity:.4} 50%{opacity:.8} }
+      @keyframes gradient-shift {
+        0%   { background-position: 0% 50%; }
+        50%  { background-position: 100% 50%; }
+        100% { background-position: 0% 50%; }
+      }
+
+      .fade-up  { animation: fadeUp  0.5s cubic-bezier(0.16,1,0.3,1) both; }
+      .fade-up-2{ animation: fadeUp  0.5s cubic-bezier(0.16,1,0.3,1) 0.1s both; }
+      .fade-up-3{ animation: fadeUp  0.5s cubic-bezier(0.16,1,0.3,1) 0.2s both; }
+      .slide-in { animation: fadeUp  0.35s cubic-bezier(0.16,1,0.3,1) both; }
+      .slide-in:nth-child(2){animation-delay:.05s}
+      .slide-in:nth-child(3){animation-delay:.10s}
+      .slide-in:nth-child(4){animation-delay:.15s}
+      .slide-in:nth-child(5){animation-delay:.20s}
+
+      /* ═══════════════════════════════════════════
+         HEADER / NAV
+      ═══════════════════════════════════════════ */
+      .site-header {
+        position: sticky; top: 0; z-index: 100;
+        background: rgba(8,11,16,0.85);
+        backdrop-filter: blur(12px);
+        -webkit-backdrop-filter: blur(12px);
+        border-bottom: 1px solid var(--border);
+        padding: 14px 24px;
+        display: flex; align-items: center; justify-content: space-between;
+      }
+      .header-brand { display: flex; align-items: center; gap: 10px; }
+      .brand-icon {
+        width: 32px; height: 32px; border-radius: 8px;
+        background: linear-gradient(135deg, #f7df1e, #e34c26);
+        display: flex; align-items: center; justify-content: center;
+        font-size: 14px; font-weight: 800; color: #000; flex-shrink: 0;
+      }
+      .brand-text {
+        font-family: var(--font-display);
+        font-weight: 800; font-size: 17px; letter-spacing: -0.4px;
+      }
+      .brand-text span { color: #f7df1e; }
+      .header-nav { display: flex; align-items: center; gap: 6px; }
+      .nav-link {
+        padding: 6px 14px; border-radius: var(--radius-sm);
+        font-size: 12px; color: var(--text-dim);
+        transition: color 0.2s, background 0.2s;
+        border: 1px solid transparent;
+      }
+      .nav-link:hover { color: var(--text); background: var(--surface); border-color: var(--border); }
+      .nav-cta {
+        padding: 7px 16px; border-radius: var(--radius-sm);
+        background: linear-gradient(135deg, #f7df1e, #e38c00);
+        color: #000; font-weight: 700; font-size: 12px;
+        border: none; transition: all 0.2s;
+      }
+      .nav-cta:hover { filter: brightness(1.1); transform: translateY(-1px); }
+
+      /* ═══════════════════════════════════════════
+         HERO
+      ═══════════════════════════════════════════ */
+      .hero {
+        position: relative; overflow: hidden;
+        padding: 72px 24px 56px; text-align: center;
+      }
+      .hero-glow {
+        position: absolute; top: -80px; left: 50%; transform: translateX(-50%);
+        width: 600px; height: 300px; border-radius: 50%;
+        background: radial-gradient(ellipse, rgba(247,223,30,0.08) 0%, transparent 70%);
+        pointer-events: none; animation: glow 4s ease-in-out infinite;
+      }
+      .hero-badge {
+        display: inline-flex; align-items: center; gap: 6px;
+        padding: 5px 14px; border-radius: 20px;
+        background: rgba(247,223,30,0.08); border: 1px solid rgba(247,223,30,0.2);
+        font-size: 11px; color: #f7df1e; margin-bottom: 20px;
+        animation: slideDown 0.5s ease both;
+      }
+      .hero-badge-dot { width: 6px; height: 6px; border-radius: 50%; background: #f7df1e; animation: glow 1.5s infinite; }
+      .hero-title {
+        font-family: var(--font-display);
+        font-size: clamp(32px, 6vw, 60px);
+        font-weight: 800; line-height: 1.1;
+        letter-spacing: -1.5px; margin-bottom: 16px;
+      }
+      .hero-title .gradient-text {
+        background: linear-gradient(135deg, #f7df1e 0%, #e34c26 40%, #2965f1 80%);
+        background-size: 200% 200%;
+        -webkit-background-clip: text;
+        -webkit-text-fill-color: transparent;
+        background-clip: text;
+        animation: gradient-shift 5s ease infinite;
+      }
+      .hero-subtitle {
+        font-size: clamp(14px, 2.5vw, 17px);
+        color: var(--text-mid); max-width: 520px;
+        margin: 0 auto 32px; line-height: 1.7;
+      }
+      .hero-pills {
+        display: flex; flex-wrap: wrap; gap: 8px;
+        justify-content: center; margin-bottom: 40px;
+      }
+      .hero-pill {
+        display: flex; align-items: center; gap: 6px;
+        padding: 6px 14px; border-radius: 20px;
+        background: var(--surface); border: 1px solid var(--border);
+        font-size: 12px; color: var(--text-mid);
+      }
+      .pill-dot { width: 7px; height: 7px; border-radius: 50%; }
+      .hero-scroll {
+        font-size: 11px; color: var(--text-ghost2);
+        display: flex; align-items: center; justify-content: center; gap: 6px;
+        margin-top: 12px;
+      }
+
+      /* ═══════════════════════════════════════════
+         FEATURES STRIP
+      ═══════════════════════════════════════════ */
+      .features-strip {
+        display: grid;
+        grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+        gap: 1px; background: var(--border);
+        border-top: 1px solid var(--border);
+        border-bottom: 1px solid var(--border);
+      }
+      .feature-item {
+        background: var(--surface-alt); padding: 20px 22px;
+        display: flex; align-items: flex-start; gap: 12px;
+      }
+      .feature-icon { font-size: 20px; flex-shrink: 0; margin-top: 2px; }
+      .feature-title { font-family: var(--font-display); font-weight: 700; font-size: 13px; margin-bottom: 3px; color: var(--text); }
+      .feature-desc  { font-size: 11px; color: var(--text-dim); line-height: 1.5; }
+
+      /* ═══════════════════════════════════════════
+         APP SECTION
+      ═══════════════════════════════════════════ */
+      .app-section { padding: 48px 16px; max-width: 1200px; margin: 0 auto; }
+      .section-label { text-align: center; margin-bottom: 32px; }
+      .section-label h2 {
+        font-family: var(--font-display);
+        font-size: clamp(22px, 4vw, 32px);
+        font-weight: 800; margin-bottom: 8px; letter-spacing: -0.5px;
+      }
+      .section-label p { color: var(--text-dim); font-size: 13px; }
+
+      /* Mode Toggle */
+      .mode-row { display: flex; justify-content: center; gap: 6px; margin-bottom: 20px; }
+      .mode-btn {
+        padding: 7px 18px; border-radius: var(--radius-sm);
+        font-size: 12px; font-family: var(--font-mono);
+        border: 1px solid var(--border-2);
+        background: transparent; color: var(--text-dim); transition: all 0.2s;
+      }
+      .mode-btn.active { border-color: #f7df1e; background: rgba(247,223,30,0.1); color: #f7df1e; }
+      .mode-btn:hover:not(.active) { border-color: var(--border); color: var(--text-mid); }
+
+      /* Language Selector */
+      .lang-selector-label {
+        font-size: 11px; color: var(--text-dim); font-weight: 600;
+        text-transform: uppercase; letter-spacing: 0.8px;
+        text-align: center; margin-bottom: 10px;
+      }
+      .lang-selector { display: flex; gap: 10px; justify-content: center; margin-bottom: 20px; flex-wrap: wrap; }
+      .lang-tab {
+        display: flex; align-items: center; gap: 9px;
+        padding: 11px 22px; border-radius: var(--radius-md);
+        font-size: 13px; font-weight: 700; font-family: var(--font-mono);
+        border: 2px solid var(--border-2);
+        background: var(--surface); color: var(--text-dim);
+        transition: all 0.2s; cursor: pointer; min-width: 120px; justify-content: center;
+      }
+      .lang-tab:hover:not(.active) { border-color: var(--text-ghost); color: var(--text-mid); transform: translateY(-1px); }
+      .lang-tab.active { border-color: #f7df1e; background: rgba(247,223,30,0.1); color: #f7df1e; box-shadow: 0 0 16px rgba(247,223,30,0.15); }
+      .lang-tab[data-lang="css"].active  { border-color: var(--lang-css);  background: rgba(41,101,241,0.1);  color: var(--lang-css);  box-shadow: 0 0 16px rgba(41,101,241,0.15); }
+      .lang-tab[data-lang="html"].active { border-color: var(--lang-html); background: rgba(227,76,38,0.1);   color: var(--lang-html); box-shadow: 0 0 16px rgba(227,76,38,0.15); }
+      .lang-dot { width: 10px; height: 10px; border-radius: 50%; flex-shrink: 0; }
+      .lang-tab-name { font-size: 13px; font-weight: 700; }
+      .lang-tab-ext  { font-size: 10px; opacity: 0.6; font-weight: 400; }
+
+      /* App Card */
+      .app-card { background: var(--surface); border: 1px solid var(--border); border-radius: var(--radius-lg); overflow: hidden; }
+
+      /* Editor */
+      .editor-wrap { overflow: hidden; }
+      .editor-chrome {
+        padding: 9px 14px; border-bottom: 1px solid var(--border);
+        display: flex; align-items: center; justify-content: space-between;
+        background: var(--surface-alt);
+      }
+      .traffic-lights { display: flex; gap: 5px; }
+      .tl { width: 10px; height: 10px; border-radius: 50%; }
+      .editor-filename { display: flex; align-items: center; gap: 6px; font-size: 11px; color: var(--text-ghost2); }
+      .fn-dot { width: 7px; height: 7px; border-radius: 50%; transition: background 0.3s; }
+      .editor-lines { font-size: 10px; color: var(--text-ghost); }
+      .editor-body { display: flex; position: relative; }
+      .line-numbers {
+        min-width: 38px; padding: 14px 10px 14px 0;
+        display: flex; flex-direction: column; align-items: flex-end;
+        user-select: none; pointer-events: none;
+        border-right: 1px solid var(--border);
+        background: var(--surface);
+      }
+      #code-input {
+        flex: 1; background: transparent; border: none; outline: none; resize: none;
+        padding: 14px 14px;
+        color: var(--text); font-size: 13px; line-height: 21px;
+        font-family: var(--font-mono); min-height: 260px;
+        caret-color: #f7df1e;
+      }
+
+      /* Review Button */
+      .review-btn-wrap { padding: 14px 16px; border-top: 1px solid var(--border); }
+      #review-btn {
+        width: 100%; padding: 13px; border-radius: var(--radius-md);
+        border: none; font-size: 14px; font-weight: 700;
+        font-family: var(--font-mono);
+        display: flex; align-items: center; justify-content: center; gap: 8px;
+        transition: all 0.2s;
+      }
+      #review-btn.ready { background: linear-gradient(135deg, #f7df1e, #e38c00); color: #000; }
+      #review-btn.ready:hover { filter: brightness(1.1); transform: translateY(-1px); box-shadow: 0 8px 28px rgba(0,0,0,0.4); }
+      #review-btn.ready:active { transform: translateY(0); }
+      #review-btn.disabled { background: var(--surface-alt); color: var(--text-ghost); cursor: not-allowed; border: 1px solid var(--border); }
+      #review-btn.lang-css.ready  { background: linear-gradient(135deg, #2965f1, #1a4fd1); color: #fff; }
+      #review-btn.lang-html.ready { background: linear-gradient(135deg, #e34c26, #c0392b); color: #fff; }
+      .spinner { width: 15px; height: 15px; border-radius: 50%; border: 2px solid rgba(0,0,0,0.2); border-top-color: #000; animation: spin 0.7s linear infinite; }
+      #review-btn.lang-css.ready .spinner,
+      #review-btn.lang-html.ready .spinner { border-color: rgba(255,255,255,0.2); border-top-color: #fff; }
+
+      /* Line numbers */
+      .ln { font-size: 11px; line-height: 21px; color: var(--text-ghost); min-height: 21px; padding-right: 8px; transition: all 0.15s; }
+      .ln.highlighted { color: #f7df1e; font-weight: 700; background: rgba(247,223,30,0.08); border-radius: 3px; }
+      .ln.error-line  { color: var(--red); font-weight: 700; }
+
+      /* Issue line badge */
+      .issue-line-badge {
+        display: inline-flex; align-items: center; gap: 5px;
+        font-size: 10px; font-weight: 700; padding: 2px 8px;
+        border-radius: 4px; background: rgba(255,255,255,0.05);
+        border: 1px solid var(--border-2); color: var(--text-dim);
+        cursor: pointer; transition: all 0.15s; margin-bottom: 6px;
+      }
+      .issue-line-badge:hover { border-color: var(--text-ghost); color: var(--text-mid); }
+
+      #error-box {
+        margin: 0 16px 14px; padding: 10px 14px;
+        background: var(--red-bg); border: 1px solid var(--red-bd);
+        border-radius: var(--radius-md);
+        color: var(--red); font-size: 12px; display: none;
+      }
+
+      /* Results */
+      #results-wrap { padding: 16px; display: none; flex-direction: column; gap: 10px; }
+
+      /* Score card */
+      .score-card {
+        background: var(--surface-alt); border: 1px solid var(--border);
+        border-radius: var(--radius-lg); padding: 16px 18px;
+        display: flex; gap: 16px; align-items: flex-start;
+      }
+      .score-badge {
+        min-width: 58px; height: 58px; border-radius: 10px;
+        border-width: 2px; border-style: solid;
+        display: flex; flex-direction: column; align-items: center; justify-content: center; flex-shrink: 0;
+      }
+      .score-num { font-family: var(--font-display); font-size: 24px; font-weight: 800; line-height: 1; }
+      .score-denom { font-size: 9px; color: var(--text-ghost2); margin-top: 1px; }
+      .score-body { flex: 1; }
+      .review-lang-tag {
+        display: flex; align-items: center; gap: 6px;
+        margin-bottom: 6px; font-size: 9px;
+        text-transform: uppercase; letter-spacing: 0.8px; font-weight: 600;
+      }
+      .rlt-dot { width: 6px; height: 6px; border-radius: 50%; }
+      #summary-text { font-size: 13px; line-height: 1.65; color: var(--text-mid); }
+      .cursor { animation: blink 0.7s infinite; }
+
+      /* Praise */
+      .praise-card { background: var(--green-bg); border: 1px solid var(--green-bd); border-radius: var(--radius-md); padding: 11px 14px; display: flex; gap: 9px; }
+      .praise-icon  { color: var(--green); font-size: 14px; margin-top: 1px; }
+      .praise-label { font-size: 9px; color: var(--green); text-transform: uppercase; letter-spacing: 0.8px; margin-bottom: 3px; }
+      .praise-text  { font-size: 12px; color: var(--text-mid); line-height: 1.55; }
+
+      /* Issues */
+      .issues-header { font-size: 9px; color: var(--text-ghost2); text-transform: uppercase; letter-spacing: 1px; font-weight: 600; margin-bottom: 8px; }
+      .issues-list   { display: flex; flex-direction: column; gap: 8px; }
+      .issue-card    { background: var(--surface-alt); border: 1px solid var(--border); border-radius: var(--radius-md); padding: 12px 14px; transition: border-color 0.2s; }
+      .issue-card:hover { border-color: var(--border-2); }
+      .issue-header  { display: flex; align-items: center; gap: 7px; margin-bottom: 7px; flex-wrap: wrap; }
+      .issue-badge   { font-size: 9.5px; font-weight: 700; padding: 2px 8px; border-radius: 4px; text-transform: uppercase; letter-spacing: 0.4px; }
+      .issue-title   { font-size: 13px; font-weight: 600; }
+      .issue-desc    { font-size: 12px; color: var(--text-dim); line-height: 1.6; margin-bottom: 9px; }
+      .issue-fix     { background: var(--bg); border: 1px solid var(--border); border-left-width: 3px; border-left-style: solid; border-radius: 6px; padding: 9px 12px; }
+      .fix-label     { font-size: 9px; text-transform: uppercase; letter-spacing: 0.8px; margin-bottom: 5px; font-weight: 600; }
+      .fix-code      { font-size: 11.5px; color: var(--text-mid); line-height: 1.65; white-space: pre-wrap; word-break: break-word; font-family: var(--font-mono); }
+
+      /* Cooldown */
+      .cooldown-bar {
+        font-size: 11px; color: var(--text-dim); text-align: center;
+        padding: 9px; background: var(--surface-alt);
+        border: 1px solid var(--border); border-radius: var(--radius-md); display: none;
+      }
+
+      /* ═══════════════════════════════════════════
+         HOW IT WORKS
+      ═══════════════════════════════════════════ */
+      .how-section { padding: 56px 24px; background: var(--surface-alt); border-top: 1px solid var(--border); border-bottom: 1px solid var(--border); }
+      .how-grid    { display: grid; gap: 24px; max-width: 900px; margin: 32px auto 0; grid-template-columns: repeat(auto-fit, minmax(240px, 1fr)); }
+      .how-card    { background: var(--surface); border: 1px solid var(--border); border-radius: var(--radius-lg); padding: 24px; }
+      .how-number  { font-family: var(--font-display); font-size: 36px; font-weight: 800; color: var(--border-2); margin-bottom: 12px; line-height: 1; }
+      .how-title   { font-family: var(--font-display); font-weight: 700; font-size: 15px; margin-bottom: 6px; }
+      .how-desc    { font-size: 12px; color: var(--text-dim); line-height: 1.6; }
+
+      /* ═══════════════════════════════════════════
+         FAQ
+      ═══════════════════════════════════════════ */
+      .faq-section { padding: 56px 24px; max-width: 720px; margin: 0 auto; }
+      .faq-item    { border-bottom: 1px solid var(--border); padding: 18px 0; }
+      .faq-q       { font-family: var(--font-display); font-weight: 700; font-size: 14px; margin-bottom: 8px; color: var(--text); }
+      .faq-a       { font-size: 12px; color: var(--text-dim); line-height: 1.7; }
+
+      /* ═══════════════════════════════════════════
+         FOOTER
+      ═══════════════════════════════════════════ */
+      .site-footer { background: var(--surface); border-top: 1px solid var(--border); padding: 40px 24px 24px; }
+      .footer-top  { display: flex; flex-wrap: wrap; gap: 32px; justify-content: space-between; max-width: 1100px; margin: 0 auto 32px; }
+      .footer-brand { max-width: 260px; }
+      .footer-brand-name { font-family: var(--font-display); font-weight: 800; font-size: 17px; letter-spacing: -0.4px; margin-bottom: 8px; }
+      .footer-brand-name span { color: #f7df1e; }
+      .footer-brand-desc { font-size: 12px; color: var(--text-dim); line-height: 1.6; }
+      .footer-col h4 { font-family: var(--font-display); font-weight: 700; font-size: 12px; text-transform: uppercase; letter-spacing: 0.8px; color: var(--text-mid); margin-bottom: 14px; }
+      .footer-col ul { list-style: none; display: flex; flex-direction: column; gap: 9px; }
+      .footer-col a  { font-size: 12px; color: var(--text-dim); transition: color 0.2s; }
+      .footer-col a:hover { color: var(--text); }
+      .footer-bottom { border-top: 1px solid var(--border); padding-top: 22px; max-width: 1100px; margin: 0 auto; display: flex; flex-wrap: wrap; gap: 12px; align-items: center; justify-content: space-between; }
+      .copyright { font-size: 11px; color: var(--text-ghost2); }
+      .footer-portfolio-link { font-size: 12px; color: var(--text-dim); display: flex; align-items: center; gap: 6px; padding: 6px 14px; border-radius: var(--radius-sm); border: 1px solid var(--border); transition: all 0.2s; }
+      .footer-portfolio-link:hover { color: var(--text); border-color: var(--border-2); background: var(--bg); }
+      .footer-legal { font-size: 11px; color: var(--text-ghost); }
+
+      /* ═══════════════════════════════════════════
+         RESPONSIVE
+      ═══════════════════════════════════════════ */
+      @media (max-width: 768px) {
+        .site-header { padding: 12px 16px; }
+        .nav-link { display: none; }
+        .hero { padding: 48px 16px 40px; }
+        .hero-title { letter-spacing: -0.8px; }
+        .app-section { padding: 36px 12px; }
+        .lang-tab { padding: 9px 14px; font-size: 12px; }
+        #code-input { min-height: 200px; font-size: 12px; }
+        .footer-top { gap: 24px; }
+      }
+      @media (max-width: 480px) {
+        .site-header { padding: 10px 14px; }
+        .brand-text { font-size: 15px; }
+        .nav-cta { padding: 6px 12px; font-size: 11px; }
+        .hero { padding: 36px 14px 32px; }
+        .hero-pills { gap: 6px; }
+        .hero-pill { font-size: 11px; padding: 5px 10px; }
+        .features-strip { grid-template-columns: 1fr; }
+        .lang-selector { gap: 8px; }
+        .lang-tab { min-width: 90px; padding: 10px 14px; font-size: 12px; }
+        .lang-tab-ext { display: none; }
+        #code-input { font-size: 11.5px; min-height: 180px; }
+        .score-card { flex-direction: column; gap: 12px; }
+        .score-badge { min-width: 48px; height: 48px; }
+        .score-num { font-size: 20px; }
+        .mode-btn { padding: 6px 12px; font-size: 11px; }
+        .footer-col { min-width: 140px; }
+        .footer-bottom { flex-direction: column; align-items: flex-start; gap: 8px; }
+        .how-grid { grid-template-columns: 1fr; }
+      }
+      @media (max-width: 360px) {
+        .hero-title { font-size: 26px; }
+        .lang-tab { padding: 7px 10px; }
+        #review-btn { font-size: 12px; }
+      }
+    </style>
+  </head>
+  <body>
+
+    <!-- ═══════════════ HEADER ═══════════════ -->
+    <header class="site-header" role="banner">
+      <a href="/" class="header-brand" aria-label="CodeReview AI home">
+        <div class="brand-icon" aria-hidden="true">CR</div>
+        <span class="brand-text">Code<span>Review</span> AI</span>
+      </a>
+      <nav class="header-nav" role="navigation" aria-label="Main navigation">
+        <a href="#tool" class="nav-link">Try It</a>
+        <a href="#how-it-works" class="nav-link">How It Works</a>
+        <a href="#faq" class="nav-link">FAQ</a>
+        <a href="#tool" class="nav-cta">Start Reviewing →</a>
+      </nav>
+    </header>
+
+    <!-- ═══════════════ HERO ═══════════════ -->
+    <main>
+      <section class="hero" aria-labelledby="hero-title">
+        <div class="hero-glow" aria-hidden="true"></div>
+        <h1 class="hero-title fade-up" id="hero-title">
+          AI Code Review for<br/>
+          <span class="gradient-text">HTML, CSS &amp; JavaScript</span>
+        </h1>
+        <p class="hero-subtitle fade-up-2">
+          Paste your code. Get expert-level feedback in seconds.
+          Catch bugs, bad naming, security risks and style issues —
+          explained clearly, even if you're just starting out.
+        </p>
+        <div class="hero-pills fade-up-3" role="list" aria-label="Supported languages">
+          <div class="hero-pill" role="listitem">
+            <span class="pill-dot" style="background:#e34c26" aria-hidden="true"></span>
+            HTML
+          </div>
+          <div class="hero-pill" role="listitem">
+            <span class="pill-dot" style="background:#2965f1" aria-hidden="true"></span>
+            CSS
+          </div>
+          <div class="hero-pill" role="listitem">
+            <span class="pill-dot" style="background:#f7df1e" aria-hidden="true"></span>
+            JavaScript
+          </div>
+        </div>
+        <div class="hero-scroll fade-up-3" aria-hidden="true">↓ paste your code below</div>
+      </section>
+
+      <!-- ═══════════════ FEATURES ═══════════════ -->
+      <section class="features-strip" aria-label="Key features">
+        <div class="feature-item">
+          <div class="feature-icon" aria-hidden="true">⚑</div>
+          <div>
+            <div class="feature-title">Bug Detection</div>
+            <div class="feature-desc">Spot logic errors, off-by-one loops, and broken async code before they hit production.</div>
+          </div>
+        </div>
+        <div class="feature-item">
+          <div class="feature-icon" aria-hidden="true">🔒</div>
+          <div>
+            <div class="feature-title">Security Checks</div>
+            <div class="feature-desc">Catch XSS vulnerabilities, SQL injection risks and unsafe patterns in your code.</div>
+          </div>
+        </div>
+        <div class="feature-item">
+          <div class="feature-icon" aria-hidden="true">✦</div>
+          <div>
+            <div class="feature-title">Naming &amp; Style</div>
+            <div class="feature-desc">Get concrete suggestions for variable names, CSS class structure and HTML semantics.</div>
+          </div>
+        </div>
+        <div class="feature-item">
+          <div class="feature-icon" aria-hidden="true">🎓</div>
+          <div>
+            <div class="feature-title">Beginner Mode</div>
+            <div class="feature-desc">Switch to "Explain Like I'm Learning" for friendly, jargon-free explanations.</div>
+          </div>
+        </div>
+      </section>
+
+      <!-- ═══════════════ APP TOOL ═══════════════ -->
+      <section class="app-section" id="tool" aria-labelledby="tool-heading">
+        <div class="section-label fade-up">
+          <h2 id="tool-heading">Try It Now — It's Free</h2>
+          <p>Select a language, paste your code, and hit review.</p>
+        </div>
+
+        <!-- Mode toggle -->
+        <div class="mode-row" role="group" aria-label="Review mode">
+          <button class="mode-btn active" id="mode-standard" onclick="setMode('standard')" aria-pressed="true">
+            ⚡ Technical Mode
+          </button>
+          <button class="mode-btn" id="mode-eli5" onclick="setMode('eli5')" aria-pressed="false">
+            🎓 Beginner Mode
+          </button>
+        </div>
+
+        <!-- Language selector -->
+        <div class="lang-selector-label">Choose Your Language</div>
+        <div class="lang-selector" role="group" aria-label="Select programming language">
+          <button class="lang-tab active" data-lang="javascript" onclick="setLang('javascript')" aria-pressed="true">
+            <span class="lang-dot" style="background:#f7df1e" aria-hidden="true"></span>
+            <span class="lang-tab-name">JavaScript</span>
+            <span class="lang-tab-ext">.js</span>
+          </button>
+          <button class="lang-tab" data-lang="css" onclick="setLang('css')" aria-pressed="false">
+            <span class="lang-dot" style="background:#2965f1" aria-hidden="true"></span>
+            <span class="lang-tab-name">CSS</span>
+            <span class="lang-tab-ext">.css</span>
+          </button>
+          <button class="lang-tab" data-lang="html" onclick="setLang('html')" aria-pressed="false">
+            <span class="lang-dot" style="background:#e34c26" aria-hidden="true"></span>
+            <span class="lang-tab-name">HTML</span>
+            <span class="lang-tab-ext">.html</span>
+          </button>
+        </div>
+
+        <div class="app-card">
+          <!-- Editor -->
+          <div class="editor-wrap" role="tabpanel" aria-labelledby="tab-js" id="editor-panel">
+            <div class="editor-chrome">
+              <div class="traffic-lights" aria-hidden="true">
+                <div class="tl" style="background:#ff5f57"></div>
+                <div class="tl" style="background:#febc2e"></div>
+                <div class="tl" style="background:#28c840"></div>
+              </div>
+              <div class="editor-filename">
+                <div class="fn-dot" id="fn-dot" style="background:#f7df1e" aria-hidden="true"></div>
+                <span id="filename-label">script.js</span>
+              </div>
+              <span class="editor-lines" id="line-count" aria-live="polite">10 ln</span>
+            </div>
+            <div class="editor-body">
+              <div class="line-numbers" id="line-numbers" aria-hidden="true"></div>
+              <textarea
+                id="code-input"
+                spellcheck="false"
+                autocorrect="off"
+                autocapitalize="off"
+                aria-label="Code input editor"
+                aria-multiline="true"
+                placeholder="// Paste your code here..."
+              ></textarea>
+            </div>
+          </div>
+
+          <!-- Review button -->
+          <div class="review-btn-wrap">
+            <button id="review-btn" class="ready" onclick="runReview()" aria-label="Run code review">
+              ▶ Review JavaScript Code
+            </button>
+          </div>
+        </div>
+
+        <!-- Error -->
+        <div id="error-box" role="alert" aria-live="assertive"></div>
+
+        <!-- Cooldown -->
+        <div class="cooldown-bar" id="cooldown-bar" aria-live="polite"></div>
+
+        <!-- Results -->
+        <div id="results-wrap" aria-live="polite" aria-atomic="false"></div>
+      </section>
+
+      <!-- ═══════════════ HOW IT WORKS ═══════════════ -->
+      <section class="how-section" id="how-it-works" aria-labelledby="how-heading">
+        <div class="section-label" style="text-align:center">
+          <h2 id="how-heading" style="font-family:var(--font-display);font-size:clamp(22px,4vw,30px);font-weight:800;margin-bottom:8px;letter-spacing:-0.5px">How It Works</h2>
+          <p style="color:var(--text-dim);font-size:13px">Three steps to better code</p>
+        </div>
+        <div class="how-grid">
+          <div class="how-card">
+            <div class="how-number">01</div>
+            <div class="how-title">Pick Your Language</div>
+            <div class="how-desc">Choose JavaScript, CSS, or HTML depending on what you're working on. More languages coming soon.</div>
+          </div>
+          <div class="how-card">
+            <div class="how-number">02</div>
+            <div class="how-title">Paste Your Code</div>
+            <div class="how-desc">Drop in any snippet — a function, a stylesheet, an HTML page. The AI analyses structure, logic and style.</div>
+          </div>
+          <div class="how-card">
+            <div class="how-number">03</div>
+            <div class="how-title">Read the Review</div>
+            <div class="how-desc">Get a score, categorised issues with clear explanations, and concrete code fixes you can apply immediately.</div>
+          </div>
+        </div>
+      </section>
+
+      <!-- ═══════════════ FAQ ═══════════════ -->
+      <section class="faq-section" id="faq" aria-labelledby="faq-heading">
+        <div class="section-label" style="text-align:center;margin-bottom:32px">
+          <h2 id="faq-heading" style="font-family:var(--font-display);font-size:clamp(22px,4vw,30px);font-weight:800;letter-spacing:-0.5px;margin-bottom:8px">Frequently Asked Questions</h2>
+          <p style="color:var(--text-dim);font-size:13px">Everything you need to know</p>
+        </div>
+        <div role="list">
+          <div class="faq-item" role="listitem">
+            <div class="faq-q">Is CodeReview AI free to use?</div>
+            <div class="faq-a">Yes — completely free. No account, no credit card, no limits beyond a short cooldown between reviews to keep the service running smoothly.</div>
+          </div>
+          <div class="faq-item" role="listitem">
+            <div class="faq-q">How accurate is the AI feedback?</div>
+            <div class="faq-a">The AI is powered by Claude (Anthropic) and reliably catches common issues like naming problems, logic bugs, and security risks. Always pair it with your own judgement.</div>
+          </div>
+          <div class="faq-item" role="listitem">
+            <div class="faq-q">What is Beginner Mode?</div>
+            <div class="faq-a">Beginner Mode rewrites all feedback in plain, encouraging language — no jargon, no assumed knowledge. Perfect if you're just learning HTML, CSS, or JavaScript.</div>
+          </div>
+          <div class="faq-item" role="listitem">
+            <div class="faq-q">Is my code stored or shared?</div>
+            <div class="faq-a">No. Your code is sent directly to the AI for analysis and is not stored or logged. Each review is stateless and independent.</div>
+          </div>
+          <div class="faq-item" role="listitem">
+            <div class="faq-q">Will more languages be added?</div>
+            <div class="faq-a">Yes. Python, TypeScript, and more are planned. The tool currently focuses on the three core web languages to keep the experience focused and high-quality.</div>
+          </div>
+        </div>
+      </section>
+    </main>
+
+    <!-- ═══════════════ FOOTER ═══════════════ -->
+    <footer class="site-footer" role="contentinfo">
+      <div class="footer-top">
+        <div class="footer-brand">
+          <div class="footer-brand-name">Code<span>Review</span> AI</div>
+          <p class="footer-brand-desc">Free AI-powered code reviews for HTML, CSS, and JavaScript. Built to help developers write better code, faster.</p>
+        </div>
+        <div class="footer-col">
+          <h4>Tool</h4>
+          <ul>
+            <li><a href="#tool">JavaScript Review</a></li>
+            <li><a href="#tool">CSS Review</a></li>
+            <li><a href="#tool">HTML Review</a></li>
+            <li><a href="#how-it-works">How It Works</a></li>
+          </ul>
+        </div>
+        <div class="footer-col">
+          <h4>Learn</h4>
+          <ul>
+            <li><a href="#faq">FAQ</a></li>
+            <li><a href="#tool">Beginner Mode</a></li>
+          </ul>
+        </div>
+      </div>
+      <div class="footer-bottom">
+        <p class="copyright">&copy; <span id="copyright-year"></span> CodeReview AI. All rights reserved.</p>
+        <a
+          href="YOUR_PORTFOLIO_LINK_HERE"
+          class="footer-portfolio-link"
+          target="_blank"
+          rel="noopener noreferrer"
+          aria-label="Visit developer portfolio"
+        >
+          👤 Built by Alfonse Otieno — View Portfolio →
+        </a>
+        <p class="footer-legal">
+          Powered by <a href="https://anthropic.com" target="_blank" rel="noopener" style="color:var(--text-dim);text-decoration:underline">Claude AI</a>
+        </p>
+      </div>
+    </footer>
+
+    <!-- ═══════════════════════════════════════════
+         JAVASCRIPT
+    ═══════════════════════════════════════════ -->
+    <script>
+      // ── Constants ──────────────────────────────
+      const COOLDOWN_SECONDS = 15;
+
+      const LANG_CONFIG = {
+        javascript: { color: "#f7df1e", filename: "script.js",   btnClass: "lang-js",   label: "JavaScript" },
+        css:        { color: "#2965f1", filename: "styles.css",  btnClass: "lang-css",  label: "CSS"        },
+        html:       { color: "#e34c26", filename: "index.html",  btnClass: "lang-html", label: "HTML"       },
+      };
+
+      const SAMPLES = {
+        javascript:
+`function getUserData(id) {
+  var d = fetch('/api/user/' + id);
+  var x = d.json();
+  if (x != null) {
+    for (var i = 0; i < x.length; i++) {
+      console.log(x[i])
+    }
+  }
+  return x
+}`,
+        css:
+`.box {
+  position: absolute;
+  top: 50%;
+  left: 50%;
+  margin-top: -50px;
+  margin-left: -100px;
+  background-color: #ff0000 !important;
+  font-size: 14px;
+}
+
+.box2 {
+  background-color: #ff0000 !important;
+  font-size: 14px;
+}`,
+        html:
+`<html>
+<head>
+  <title>My Page</title>
+</head>
+<body>
+  <div>
+    <div onclick="doStuff()">Click me</div>
+    <div style="color:red;font-size:24px;">Important!</div>
+    <img src="photo.jpg">
+    <a href="#">Learn more</a>
+  </div>
+</body>
+</html>`,
+      };
+
+      const LANG_HINTS = {
+        javascript: "async/await vs promises, var/let/const scoping, type coercion, null checks, modern ES6+ syntax",
+        css:        "specificity issues, !important overuse, magic numbers, responsive design, CSS variables, modern layout (flex/grid)",
+        html:       "semantic elements, accessibility (alt, aria, labels), proper nesting, deprecated tags, SEO best practices",
+      };
+
+      const CATEGORY_META = {
+        naming:      { label: "Naming",      color: "#fbbf24", bg: "rgba(251,191,36,0.1)"  },
+        logic:       { label: "Logic",       color: "#f87171", bg: "rgba(248,113,113,0.1)" },
+        improvement: { label: "Improve",     color: "#2dd4bf", bg: "rgba(45,212,191,0.1)"  },
+        security:    { label: "Security",    color: "#c084fc", bg: "rgba(192,132,252,0.1)" },
+        performance: { label: "Performance", color: "#fb923c", bg: "rgba(251,146,60,0.1)"  },
+        style:       { label: "Style",       color: "#60a5fa", bg: "rgba(96,165,250,0.1)"  },
+      };
+
+      // ── State ──────────────────────────────────
+      let currentLang       = "javascript";
+      let currentMode       = "standard";
+      let loading           = false;
+      let cooldownTimer     = null;
+      let cooldownRemaining = 0;
+      let typewriterInterval = null;
+      let highlightedLines  = new Set();
+
+      // ── DOM refs ───────────────────────────────
+      const codeInput     = document.getElementById("code-input");
+      const reviewBtn     = document.getElementById("review-btn");
+      const errorBox      = document.getElementById("error-box");
+      const resultsWrap   = document.getElementById("results-wrap");
+      const cooldownBar   = document.getElementById("cooldown-bar");
+      const lineNumbers   = document.getElementById("line-numbers");
+      const lineCount     = document.getElementById("line-count");
+      const fnDot         = document.getElementById("fn-dot");
+      const filenameLabel = document.getElementById("filename-label");
+
+      // ── Init ───────────────────────────────────
+      document.getElementById("copyright-year").textContent = new Date().getFullYear();
+      codeInput.value = SAMPLES["javascript"];
+      updateLineNumbers();
+      codeInput.addEventListener("input", updateLineNumbers);
+
+      // ── Language selection ─────────────────────
+      function setLang(lang) {
+        currentLang = lang;
+        const cfg = LANG_CONFIG[lang];
+
+        document.querySelectorAll(".lang-tab").forEach(t => {
+          const active = t.dataset.lang === lang;
+          t.classList.toggle("active", active);
+          t.setAttribute("aria-pressed", active);
+        });
+
+        fnDot.style.background = cfg.color;
+        filenameLabel.textContent = cfg.filename;
+        codeInput.value = SAMPLES[lang];
+        updateLineNumbers();
+        updateButton();
+        clearResults();
+      }
+
+      // ── Mode selection ─────────────────────────
+      function setMode(mode) {
+        currentMode = mode;
+        document.getElementById("mode-standard").classList.toggle("active", mode === "standard");
+        document.getElementById("mode-eli5").classList.toggle("active", mode === "eli5");
+        document.getElementById("mode-standard").setAttribute("aria-pressed", mode === "standard");
+        document.getElementById("mode-eli5").setAttribute("aria-pressed", mode === "eli5");
+      }
+
+      // ── Line numbers ───────────────────────────
+      function updateLineNumbers() {
+        const lines = codeInput.value.split("\n");
+        lineCount.textContent = lines.length + " ln";
+        lineNumbers.innerHTML = lines.map((_, i) => {
+          const lineNum = i + 1;
+          const cls = highlightedLines.has(lineNum) ? "ln error-line" : "ln";
+          return `<div class="${cls}" data-line="${lineNum}">${lineNum}</div>`;
+        }).join("");
+      }
+
+      function highlightLine(lineNum) {
+        const lines = codeInput.value.split("\n");
+        if (!lineNum || lineNum < 1 || lineNum > lines.length) return;
+
+        const offset = lines.slice(0, lineNum - 1).join("\n").length + (lineNum > 1 ? 1 : 0);
+        codeInput.focus();
+        codeInput.setSelectionRange(offset, offset + lines[lineNum - 1].length);
+        codeInput.scrollTop = (lineNum - 3) * 21;
+
+        highlightedLines = new Set([lineNum]);
+        updateLineNumbers();
+
+        setTimeout(() => {
+          highlightedLines.clear();
+          updateLineNumbers();
+        }, 3000);
+      }
+
+      // ── Button state ───────────────────────────
+      function updateButton() {
+        const cfg = LANG_CONFIG[currentLang];
+        const canReview = !loading && cooldownRemaining === 0;
+
+        reviewBtn.className = `ready ${canReview ? cfg.btnClass : "disabled"}`;
+        if (!canReview && cooldownRemaining === 0 && !loading) {
+          reviewBtn.className = "disabled";
+        }
+        reviewBtn.disabled = !canReview;
+
+        if (loading) {
+          reviewBtn.className = `ready ${cfg.btnClass}`;
+          reviewBtn.innerHTML = `<div class="spinner"></div> Analysing ${cfg.label}…`;
+        } else if (cooldownRemaining > 0) {
+          reviewBtn.className = "disabled";
+          reviewBtn.innerHTML = `⏱ Next review in ${cooldownRemaining}s`;
+        } else {
+          reviewBtn.className = `ready ${cfg.btnClass}`;
+          reviewBtn.innerHTML = `▶ Review ${cfg.label} Code`;
+        }
+      }
+
+      // ── Cooldown ───────────────────────────────
+      function startCooldown() {
+        cooldownRemaining = COOLDOWN_SECONDS;
+        updateButton();
+        cooldownBar.style.display = "block";
+        cooldownBar.textContent = `⏱ Next review available in ${cooldownRemaining}s`;
+
+        cooldownTimer = setInterval(() => {
+          cooldownRemaining--;
+          updateButton();
+          if (cooldownRemaining <= 0) {
+            clearInterval(cooldownTimer);
+            cooldownBar.style.display = "none";
+            updateButton();
+          } else {
+            cooldownBar.textContent = `⏱ Next review available in ${cooldownRemaining}s`;
+          }
+        }, 1000);
+      }
+
+      // ── Clear results ──────────────────────────
+      function clearResults() {
+        resultsWrap.style.display = "none";
+        resultsWrap.innerHTML = "";
+        errorBox.style.display = "none";
+        errorBox.textContent = "";
+        highlightedLines = new Set();
+        updateLineNumbers();
+        if (typewriterInterval) clearInterval(typewriterInterval);
+      }
+
+      // ── Typewriter ─────────────────────────────
+      function typewrite(el, text) {
+        if (typewriterInterval) clearInterval(typewriterInterval);
+        let i = 0;
+        el.textContent = "";
+        typewriterInterval = setInterval(() => {
+          el.textContent = text.slice(0, i + 1);
+          i++;
+          if (i >= text.length) clearInterval(typewriterInterval);
+        }, 16);
+      }
+
+      // ── Score colour ───────────────────────────
+      function scoreColor(n) {
+        if (n >= 8) return "#2dd4bf";
+        if (n >= 5) return "#fbbf24";
+        return "#f87171";
+      }
+
+      // ── Escape HTML ────────────────────────────
+      function escHtml(str) {
+        return String(str)
+          .replace(/&/g, "&amp;")
+          .replace(/</g, "&lt;")
+          .replace(/>/g, "&gt;")
+          .replace(/"/g, "&quot;");
+      }
+
+      // ── Render results ─────────────────────────
+      function renderReview(data) {
+        const cfg = LANG_CONFIG[currentLang];
+        const sc  = scoreColor(data.score);
+
+        const issueLines = (data.issues || []).filter(i => i.line).map(i => i.line);
+        highlightedLines = new Set(issueLines);
+        updateLineNumbers();
+
+        resultsWrap.style.display = "flex";
+        resultsWrap.innerHTML = "";
+
+        // Score card
+        const scoreCard = document.createElement("div");
+        scoreCard.className = "score-card slide-in";
+        scoreCard.innerHTML = `
+          <div class="score-badge" style="border-color:${sc};background:${sc}10">
+            <span class="score-num" style="color:${sc}">${data.score}</span>
+            <span class="score-denom">/10</span>
+          </div>
+          <div class="score-body">
+            <div class="review-lang-tag">
+              <div class="rlt-dot" style="background:${cfg.color}"></div>
+              <span style="color:${cfg.color}">${cfg.label} Review</span>
+            </div>
+            <div id="summary-text"></div>
+          </div>`;
+        resultsWrap.appendChild(scoreCard);
+        typewrite(document.getElementById("summary-text"), data.summary);
+
+        // Praise
+        if (data.praise && data.praise !== "Nothing notable") {
+          const praiseEl = document.createElement("div");
+          praiseEl.className = "praise-card slide-in";
+          praiseEl.innerHTML = `
+            <span class="praise-icon">✓</span>
+            <div>
+              <div class="praise-label">What's working</div>
+              <p class="praise-text">${escHtml(data.praise)}</p>
+            </div>`;
+          resultsWrap.appendChild(praiseEl);
+        }
+
+        // Issues
+        if (data.issues && data.issues.length > 0) {
+          const issuesWrap = document.createElement("div");
+          issuesWrap.className = "slide-in";
+          issuesWrap.innerHTML = `<div class="issues-header">${data.issues.length} Issue${data.issues.length !== 1 ? "s" : ""} · ${cfg.label}</div>`;
+          const list = document.createElement("div");
+          list.className = "issues-list";
+
+          data.issues.forEach(issue => {
+            const cat  = CATEGORY_META[issue.category] || CATEGORY_META.improvement;
+            const card = document.createElement("div");
+            card.className = "issue-card";
+
+            const lineBadgeHtml = issue.line
+              ? `<button class="issue-line-badge" onclick="highlightLine(${issue.line})" title="Jump to line ${issue.line}">📍 Line ${issue.line}</button>`
+              : "";
+
+            card.innerHTML = `
+              <div class="issue-header">
+                <span class="issue-badge" style="color:${cat.color};background:${cat.bg}">${escHtml(cat.label)}</span>
+                <span class="issue-title">${escHtml(issue.title)}</span>
+              </div>
+              ${lineBadgeHtml}
+              <p class="issue-desc">${escHtml(issue.description)}</p>
+              ${issue.suggestion ? `
+              <div class="issue-fix" style="border-left-color:${cat.color}">
+                <div class="fix-label" style="color:${cat.color}">✦ Fixed Code</div>
+                <code class="fix-code">${escHtml(issue.suggestion)}</code>
+              </div>` : ""}`;
+            list.appendChild(card);
+          });
+
+          issuesWrap.appendChild(list);
+          resultsWrap.appendChild(issuesWrap);
+        }
+      }
+
+      // ── Main review function ───────────────────
+      async function runReview() {
+        const code = codeInput.value.trim();
+        if (!code || loading || cooldownRemaining > 0) return;
+
+        const lang = currentLang;
+        const cfg  = LANG_CONFIG[lang];
+
+        loading = true;
+        updateButton();
+        clearResults();
+
+        try {
+          // ✅ Calls the Vercel serverless function — API key stays on server
+          const res = await fetch("/api/review", {
+            method: "POST",
+            headers: { "Content-Type": "application/json" },
+            body: JSON.stringify({
+              code,
+              language: lang,
+              mode: currentMode,
+              langLabel: cfg.label,
+              langHints: LANG_HINTS[lang],
+            }),
+          });
+
+          const data = await res.json();
+
+          if (!res.ok) {
+            throw new Error(data.error || `Server error ${res.status}`);
+          }
+
+          renderReview(data);
+          startCooldown();
+
+        } catch (err) {
+          errorBox.textContent = "⚠ " + (err.message || "Review failed. Please try again.");
+          errorBox.style.display = "block";
+        } finally {
+          loading = false;
+          updateButton();
+        }
+      }
+
+      // ── Keyboard shortcut (Ctrl/Cmd + Enter) ──
+      codeInput.addEventListener("keydown", e => {
+        if ((e.ctrlKey || e.metaKey) && e.key === "Enter") {
+          e.preventDefault();
+          runReview();
+        }
+      });
+
+      // ── Smooth scroll ─────────────────────────
+      document.querySelectorAll('a[href^="#"]').forEach(a => {
+        a.addEventListener("click", e => {
+          const target = document.querySelector(a.getAttribute("href"));
+          if (target) {
+            e.preventDefault();
+            target.scrollIntoView({ behavior: "smooth", block: "start" });
+          }
+        });
+      });
+    </script>
+  </body>
+</html>
