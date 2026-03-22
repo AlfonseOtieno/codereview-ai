@@ -4,7 +4,7 @@ export default async function handler(req, res) {
     return res.status(405).json({ error: "Method not allowed" });
   }
 
-  // CORS headers — tighten origin in production to your actual domain
+  // CORS headers
   res.setHeader("Access-Control-Allow-Origin", "*");
   res.setHeader("Access-Control-Allow-Methods", "POST, OPTIONS");
   res.setHeader("Access-Control-Allow-Headers", "Content-Type");
@@ -17,12 +17,12 @@ export default async function handler(req, res) {
     return res.status(400).json({ error: "Missing code or language" });
   }
 
-  const apiKey = process.env.ANTHROPIC_API_KEY;
+  const apiKey = process.env.GEMINI_API_KEY;
   if (!apiKey) {
     return res.status(500).json({ error: "API key not configured on server." });
   }
 
-  const systemPrompt = `You are an expert ${langLabel} code reviewer.
+  const prompt = `You are an expert ${langLabel} code reviewer.
 
 Respond ONLY with a valid JSON object — no markdown fences, no preamble, no trailing text.
 
@@ -52,39 +52,38 @@ ${
 
 Key concerns for ${langLabel}: ${langHints}
 
-Return ONLY the raw JSON object.`;
+Return ONLY the raw JSON object.
+
+Review this ${langLabel} code:
+
+${code}`;
 
   try {
-    const upstream = await fetch("https://api.anthropic.com/v1/messages", {
-      method: "POST",
-      headers: {
-        "Content-Type": "application/json",
-        "x-api-key": apiKey,
-        "anthropic-version": "2023-06-01",
-      },
-      body: JSON.stringify({
-        model: "claude-sonnet-4-20250514",
-        max_tokens: 1200,
-        system: systemPrompt,
-        messages: [
-          {
-            role: "user",
-            content: `Review this ${langLabel} code:\n\n${code}`,
+    const upstream = await fetch(
+      `https://generativelanguage.googleapis.com/v1beta/models/gemini-2.5-flash-lite-preview-06-17:generateContent?key=${apiKey}`,
+      {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({
+          contents: [{ parts: [{ text: prompt }] }],
+          generationConfig: {
+            temperature: 0.3,
+            maxOutputTokens: 1200,
           },
-        ],
-      }),
-    });
+        }),
+      }
+    );
 
     if (!upstream.ok) {
       const errText = await upstream.text();
-      console.error("Anthropic error:", errText);
+      console.error("Gemini error:", errText);
       return res
         .status(upstream.status)
-        .json({ error: `Anthropic API error: ${upstream.status}` });
+        .json({ error: `Gemini API error: ${upstream.status}` });
     }
 
     const data = await upstream.json();
-    const raw = (data.content || []).map((b) => b.text || "").join("");
+    const raw = data?.candidates?.[0]?.content?.parts?.[0]?.text || "";
     const clean = raw.replace(/```json|```/g, "").trim();
 
     let parsed;
